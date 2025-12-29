@@ -3,12 +3,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  _req: Request,
-  context: { params: Promise<{ inviteCode: string }> }
-) {
-  const { inviteCode } = await context.params;
-
+export async function GET() {
   const img = new ImageResponse(
     (
       <div
@@ -17,36 +12,39 @@ export async function GET(
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 64,
+          justifyContent: "center",
+          padding: 80,
           background: "#0b0b0f",
           color: "#ffffff",
           fontFamily: "system-ui",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ fontSize: 28, opacity: 0.85 }}>Classic Car IQ</div>
-          <div style={{ fontSize: 64, fontWeight: 800, lineHeight: 1.05 }}>
-            You’ve been challenged
-          </div>
-          <div style={{ fontSize: 30, opacity: 0.9 }}>
-            Tap to open this challenge in the app
+        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          <img
+            src="https://links.classiccariq.com/logo-square.png"
+            width={96}
+            height={96}
+            alt="Classic Car IQ"
+          />
+          <div style={{ fontSize: 32, fontWeight: 700, opacity: 0.9 }}>
+            Classic Car IQ
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ fontSize: 22, opacity: 0.7 }}>Invite Code</div>
+        <div style={{ marginTop: 48 }}>
           <div
             style={{
-              fontSize: 44,
-              fontWeight: 800,
-              letterSpacing: 2,
-              padding: "18px 22px",
-              borderRadius: 18,
-              border: "2px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.06)",}}
+              fontSize: 72,
+              fontWeight: 900,
+              lineHeight: 1.05,
+              marginBottom: 24,
+            }}
           >
-            {inviteCode}
+            You’ve been challenged
+          </div>
+
+          <div style={{ fontSize: 34, opacity: 0.85 }}>
+            Tap to open this challenge in the app
           </div>
         </div>
       </div>
@@ -59,7 +57,6 @@ export async function GET(
   return new Response(buffer, {
     headers: {
       "Content-Type": "image/png",
-      "Content-Length": buffer.byteLength.toString(),
       "Cache-Control": "public, max-age=0, must-revalidate",
     },
   });
