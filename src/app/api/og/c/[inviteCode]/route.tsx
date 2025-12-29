@@ -44,9 +44,7 @@ export async function GET(
               padding: "18px 22px",
               borderRadius: 18,
               border: "2px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.06)",
-              width: "fit-content",
-            }}
+              background: "rgba(255,255,255,0.06)",}}
           >
             {inviteCode}
           </div>
