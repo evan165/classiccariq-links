@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 
+import { DetourRedirect } from "@/app/components/DetourRedirect";
+
 export const runtime = "edge";
+
+// Temporary placeholder; a static OG image can be swapped in later without a
+// code change.
+const image = "https://links.classiccariq.com/favicon.ico";
 
 export const metadata: Metadata = {
   title: "Classic Car IQ — Daily IQ",
@@ -12,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://links.classiccariq.com/api/og/daily-iq",
+        url: image,
       },
     ],
   },
@@ -20,13 +26,18 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Classic Car IQ — Daily IQ",
     description: "Take today’s Classic Car IQ Daily IQ challenge.",
-    images: ["https://links.classiccariq.com/api/og/daily-iq"],
+    images: [image],
   },
 };
 
 export default function DailyIQPage() {
+  const detourBase = process.env.DETOUR_BASE_URL || "";
+  const normalizedBase = detourBase.replace(/\/+$/, "");
+  const detourTarget = normalizedBase ? `${normalizedBase}/daily-iq` : "";
+
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
+      <DetourRedirect target={detourTarget} />
       <h1>Classic Car IQ</h1>
       <p>Daily IQ Challenge</p>
       <p>If you aren’t redirected automatically, open the Classic Car IQ app.</p>

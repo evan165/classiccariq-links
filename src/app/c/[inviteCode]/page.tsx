@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { DetourRedirect } from "@/app/components/DetourRedirect";
+
 export const runtime = "edge";
 
 type Props = {
@@ -10,13 +12,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { inviteCode } = await params;
 
   const url = `https://links.classiccariq.com/c/${inviteCode}`;
-
-  const buildVersion =
-    process.env.VERCEL_GIT_COMMIT_SHA ||
-    process.env.VERCEL_DEPLOYMENT_ID ||
-    "1";
-
-  const image = `https://links.classiccariq.com/api/og/c/${inviteCode}?v=${buildVersion}`;
+  // Use the existing OG endpoint so crawlers fetch a predictable image without
+  // needing a new binary asset inside this repo. Middleware stays out of the
+  // way, so bots see a normal 200 HTML response with this URL in the tags.
+  const image = `https://links.classiccariq.com/api/og/c/${encodeURIComponent(
+    inviteCode,
+  )}`;
 
   return {
     metadataBase: new URL("https://links.classiccariq.com"),
@@ -58,9 +59,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function InvitePage({ params }: Props) {
   const { inviteCode } = await params;
+  const detourBase = process.env.DETOUR_BASE_URL || "";
+  const normalizedBase = detourBase.replace(/\/+$/, "");
+  const detourTarget = normalizedBase
+    ? `${normalizedBase}/c/${encodeURIComponent(inviteCode)}`
+    : "";
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
+      <DetourRedirect target={detourTarget} />
       <h1>Classic Car IQ</h1>
       <p>
         Challenge invite: <strong>{inviteCode}</strong>
