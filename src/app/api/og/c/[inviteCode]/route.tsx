@@ -1,11 +1,6 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const contentType = "image/png";
-export const size = {
-  width: 1200,
-  height: 630,
-};
 
 export async function GET(
   _req: Request,
@@ -13,7 +8,7 @@ export async function GET(
 ) {
   const { inviteCode } = await context.params;
 
-  return new ImageResponse(
+  const img = new ImageResponse(
     (
       <div
         style={{
@@ -57,6 +52,22 @@ export async function GET(
         </div>
       </div>
     ),
-    size
+    { width: 1200, height: 630 }
   );
+
+  // Materialize to bytes so we can send Content-Length (some crawlers are picky).
+  const arrayBuffer = await img.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+
+  return new Response(bytes, {
+    status: 200,
+    headers: {
+      "content-type": "image/png",
+      "content-length": String(bytes.byteLength),
+      // Crawler-friendly caching (and helps iMessage/Facebook cache the image)
+      "cache-control": "public, immutable, max-age=31536000",
+      // Avoid any chance of compression/transform surprises
+      "content-disposition": 'inline; filename="og.png"',
+    },
+  });
 }
