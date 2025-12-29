@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 export const runtime = "edge";
 
-function pickInviteCode(
-  params: { inviteCode?: string },
-  searchParams: { inviteCode?: string }
-) {
+async function resolveObj<T extends object>(v: T | Promise<T>): Promise<T> {
+  return await Promise.resolve(v);
+}
+
+function pickInviteCode(params: { inviteCode?: string }, searchParams: { inviteCode?: string }) {
   return params.inviteCode || searchParams.inviteCode || "unknown";
 }
 
@@ -13,10 +14,13 @@ export async function generateMetadata({
   params,
   searchParams,
 }: {
-  params: { inviteCode?: string };
-  searchParams: { inviteCode?: string };
+  params: { inviteCode?: string } | Promise<{ inviteCode?: string }>;
+  searchParams: { inviteCode?: string } | Promise<{ inviteCode?: string }>;
 }): Promise<Metadata> {
-  const inviteCode = pickInviteCode(params, searchParams);
+  const p = await resolveObj(params);
+  const sp = await resolveObj(searchParams);
+
+  const inviteCode = pickInviteCode(p, sp);
 
   const url = `https://links.classiccariq.com/c/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Invite";
@@ -42,14 +46,17 @@ export async function generateMetadata({
   };
 }
 
-export default function ChallengeInvitePage({
+export default async function ChallengeInvitePage({
   params,
   searchParams,
 }: {
-  params: { inviteCode?: string };
-  searchParams: { inviteCode?: string };
+  params: { inviteCode?: string } | Promise<{ inviteCode?: string }>;
+  searchParams: { inviteCode?: string } | Promise<{ inviteCode?: string }>;
 }) {
-  const inviteCode = pickInviteCode(params, searchParams);
+  const p = await resolveObj(params);
+  const sp = await resolveObj(searchParams);
+
+  const inviteCode = pickInviteCode(p, sp);
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
