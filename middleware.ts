@@ -9,28 +9,35 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const ua = req.headers.get("user-agent") || "";
 
-  // Only handle share routes here
-  const isShareRoute = pathname.startsWith("/c/") || pathname.startsWith("/r/");
+  const isShareRoute =
+    pathname.startsWith("/c/") ||
+    pathname.startsWith("/r/") ||
+    pathname === "/daily-iq";
+
   if (!isShareRoute) return NextResponse.next();
 
-  // If it's a bot/crawler, serve the page (so OG tags can be read)
+  // Bots: serve HTML so OG tags can be read.
   if (BOT_UA.test(ua)) return NextResponse.next();
 
-  // Humans: 302 redirect to Detour deep link
-  // Set DETOUR_BASE_URL in Vercel (Project Settings → Environment Variables).
   const detourBase = process.env.DETOUR_BASE_URL || "";
+  if (!detourBase) return NextResponse.redirect("https://links.classiccariq.com/", 302);
 
+  const base = detourBase.replace(/\/+$/, "");
+
+  // /daily-iq has no param
+  if (pathname === "/daily-iq") {
+    return NextResponse.redirect(`${base}/daily-iq`, 302);
+  }
+
+  // /c/:code or /r/:code
   const parts = pathname.split("/").filter(Boolean); // ["c"|"r", code]
   const kind = parts[0] || "";
   const code = parts[1] || "";
 
-  const target = detourBase
-    ? `${detourBase.replace(/\/+$/, "")}/${encodeURIComponent(kind)}/${encodeURIComponent(code)}`
-    : "https://links.classiccariq.com/";
-
+  const target = `${base}/${encodeURIComponent(kind)}/${encodeURIComponent(code)}`;
   return NextResponse.redirect(target, 302);
 }
 
 export const config = {
-  matcher: ["/c/:path*", "/r/:path*"],
+  matcher: ["/c/:path*", "/r/:path*", "/daily-iq"],
 };
