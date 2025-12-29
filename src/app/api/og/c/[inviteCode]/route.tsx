@@ -1,6 +1,11 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
+export const contentType = "image/png";
+export const size = {
+  width: 1200,
+  height: 630,
+};
 
 export async function GET(
   _req: Request,
@@ -12,12 +17,12 @@ export async function GET(
     (
       <div
         style={{
-          width: "1200px",
-          height: "630px",
+          width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "64px",
+          padding: 64,
           background: "#0b0b0f",
           color: "#ffffff",
           fontFamily: "system-ui",
@@ -52,6 +57,6 @@ export async function GET(
         </div>
       </div>
     ),
-    { width: 1200, height: 630 }
+    size
   );
 }
