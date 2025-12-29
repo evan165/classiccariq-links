@@ -1,11 +1,11 @@
 export const runtime = "edge";
 
 type Props = {
-  params: { inviteCode: string };
+  params: Promise<{ inviteCode: string }>;
 };
 
 export async function generateMetadata({ params }: Props) {
-  const inviteCode = params.inviteCode;
+  const { inviteCode } = await params;
   const url = `https://links.classiccariq.com/c/${inviteCode}`;
   const image = `https://links.classiccariq.com/api/og/c/${inviteCode}`;
 
@@ -35,12 +35,14 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default function InvitePage({ params }: Props) {
+export default async function InvitePage({ params }: Props) {
+  const { inviteCode } = await params;
+
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
       <h1>Classic Car IQ</h1>
       <p>
-        Challenge invite: <strong>{params.inviteCode}</strong>
+        Challenge invite: <strong>{inviteCode}</strong>
       </p>
       <p>If you aren’t redirected automatically, open the Classic Car IQ app.</p>
     </main>
