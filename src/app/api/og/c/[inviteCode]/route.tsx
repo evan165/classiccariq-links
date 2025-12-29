@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const { inviteCode } = await context.params;
 
-  const img = new ImageResponse(
+  return new ImageResponse(
     (
       <div
         style={{
@@ -52,22 +52,12 @@ export async function GET(
         </div>
       </div>
     ),
-    { width: 1200, height: 630 }
+    {
+      width: 1200,
+      height: 630,
+      headers: {
+        "cache-control": "public, max-age=0, must-revalidate",
+      },
+    }
   );
-
-  // Materialize to bytes so we can send Content-Length (some crawlers are picky).
-  const arrayBuffer = await img.arrayBuffer();
-  const bytes = new Uint8Array(arrayBuffer);
-
-  return new Response(bytes, {
-    status: 200,
-    headers: {
-      "content-type": "image/png",
-      "content-length": String(bytes.byteLength),
-      // Crawler-friendly caching (and helps iMessage/Facebook cache the image)
-      "cache-control": "public, immutable, max-age=31536000",
-      // Avoid any chance of compression/transform surprises
-      "content-disposition": 'inline; filename="og.png"',
-    },
-  });
 }
