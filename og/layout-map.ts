@@ -85,7 +85,7 @@ export type LayoutBlock =
       y: number;
       w: number;
       style: TextStyle;
-      from: "cta" | "question" | "headline";
+      from: "cta" | "question" | "headline" | "subtitle" | "subhead" | "category" | "dayLabel" | "brandName";
       fallback: string;
     }
   | {
