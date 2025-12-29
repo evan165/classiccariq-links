@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: Request,
@@ -52,12 +53,6 @@ export async function GET(
         </div>
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-      headers: {
-        "cache-control": "public, max-age=0, must-revalidate",
-      },
-    }
+    { width: 1200, height: 630 }
   );
 }
