@@ -1,17 +1,24 @@
+import type { Metadata } from "next";
+
 export const runtime = "edge";
 
 type Props = {
   params: Promise<{ inviteCode: string }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { inviteCode } = await params;
+
   const url = `https://links.classiccariq.com/c/${inviteCode}`;
   const image = `https://links.classiccariq.com/api/og/c/${inviteCode}`;
 
   return {
+    metadataBase: new URL("https://links.classiccariq.com"),
     title: "Classic Car IQ — Challenge Invite",
     description: "Tap to open this Classic Car IQ challenge in the app.",
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: "Classic Car IQ — Challenge Invite",
       description: "Tap to open this Classic Car IQ challenge in the app.",
@@ -20,6 +27,8 @@ export async function generateMetadata({ params }: Props) {
       images: [
         {
           url: image,
+          secureUrl: image,
+          type: "image/png",
           width: 1200,
           height: 630,
           alt: "Classic Car IQ — Challenge Invite",
@@ -31,6 +40,12 @@ export async function generateMetadata({ params }: Props) {
       title: "Classic Car IQ — Challenge Invite",
       description: "Tap to open this Classic Car IQ challenge in the app.",
       images: [image],
+    },
+    other: {
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:type": "image/png",
+      "og:image:secure_url": image,
     },
   };
 }
