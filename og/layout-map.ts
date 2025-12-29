@@ -76,7 +76,7 @@ export type LayoutBlock =
       y: number;
       w: number;
       style: TextStyle;
-      from: "brandName" | "headline";
+      from: "brandName" | "headline" | "dayLabel";
       fallback: string;
     }
   | {
@@ -94,7 +94,7 @@ export type LayoutBlock =
       y: number;
       w: number;
       style: TextStyle;
-      from: "subtitle" | "subhead" | "category" | "dayLabel";
+      from: "subtitle" | "subhead" | "category" | "dayLabel" | "cta";
       fallback?: string;
     }
   | {
