@@ -4,11 +4,10 @@ export const runtime = "edge";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { inviteCode: string } }
+  context: { params: Promise<{ inviteCode: string }> }
 ) {
-  const inviteCode = params.inviteCode;
+  const { inviteCode } = await context.params;
 
-  // 1200x630 is the standard OG size (Twitter/Slack/iMessage previews)
   return new ImageResponse(
     (
       <div
@@ -53,9 +52,6 @@ export async function GET(
         </div>
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-    }
+    { width: 1200, height: 630 }
   );
 }
