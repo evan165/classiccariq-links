@@ -2,12 +2,21 @@ import type { Metadata } from "next";
 
 export const runtime = "edge";
 
+function pickInviteCode(
+  params: { inviteCode?: string },
+  searchParams: { inviteCode?: string }
+) {
+  return params.inviteCode || searchParams.inviteCode || "unknown";
+}
+
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
-  params: Promise<{ inviteCode: string }>;
+  params: { inviteCode?: string };
+  searchParams: { inviteCode?: string };
 }): Promise<Metadata> {
-  const { inviteCode } = await params;
+  const inviteCode = pickInviteCode(params, searchParams);
 
   const url = `https://links.classiccariq.com/c/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Invite";
@@ -33,12 +42,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function ChallengeInvitePage({
+export default function ChallengeInvitePage({
   params,
+  searchParams,
 }: {
-  params: Promise<{ inviteCode: string }>;
+  params: { inviteCode?: string };
+  searchParams: { inviteCode?: string };
 }) {
-  const { inviteCode } = await params;
+  const inviteCode = pickInviteCode(params, searchParams);
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
