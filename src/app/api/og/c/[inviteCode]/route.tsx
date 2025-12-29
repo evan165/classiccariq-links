@@ -9,7 +9,7 @@ export async function GET(
 ) {
   const { inviteCode } = await context.params;
 
-  return new ImageResponse(
+  const img = new ImageResponse(
     (
       <div
         style={{
@@ -55,4 +55,14 @@ export async function GET(
     ),
     { width: 1200, height: 630 }
   );
+
+  const buffer = await img.arrayBuffer();
+
+  return new Response(buffer, {
+    headers: {
+      "Content-Type": "image/png",
+      "Content-Length": buffer.byteLength.toString(),
+      "Cache-Control": "public, max-age=0, must-revalidate",
+    },
+  });
 }
