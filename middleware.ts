@@ -12,6 +12,7 @@ export function middleware(req: NextRequest) {
   const isShareRoute =
     pathname.startsWith("/c/") ||
     pathname.startsWith("/r/") ||
+    pathname.startsWith("/p/") ||
     pathname === "/daily-iq";
 
   if (!isShareRoute) return NextResponse.next();
@@ -29,15 +30,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(`${base}/daily-iq`, 302);
   }
 
-  // /c/:code or /r/:code
-  const parts = pathname.split("/").filter(Boolean); // ["c"|"r", code]
+  // /c/:code, /r/:code, /p/:profileId
+  const parts = pathname.split("/").filter(Boolean); // ["c"|"r"|"p", id]
   const kind = parts[0] || "";
-  const code = parts[1] || "";
+  const id = parts[1] || "";
 
-  const target = `${base}/${encodeURIComponent(kind)}/${encodeURIComponent(code)}`;
+  const target = `${base}/${encodeURIComponent(kind)}/${encodeURIComponent(id)}`;
   return NextResponse.redirect(target, 302);
 }
 
 export const config = {
-  matcher: ["/c/:path*", "/r/:path*", "/daily-iq"],
+  matcher: ["/c/:path*", "/r/:path*", "/p/:path*", "/daily-iq"],
 };
