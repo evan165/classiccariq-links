@@ -10,13 +10,15 @@ export async function generateMetadata({
   params: { profileId: string };
 }): Promise<Metadata> {
   const profileId = params.profileId;
+  const version =
+    process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
 
   const url = `https://links.classiccariq.com/p/${encodeURIComponent(profileId)}`;
   const title = "Classic Car IQ — Player Profile";
   const description = "View this Classic Car IQ player profile.";
-  // Temporary placeholder; a dedicated static OG image can be swapped in later
-  // without changing the page code.
-  const ogImage = "https://links.classiccariq.com/favicon.ico";
+  const ogImage = `https://links.classiccariq.com/api/og/p/${encodeURIComponent(
+    profileId,
+  )}?v=${encodeURIComponent(version)}`;
 
   return {
     title,

@@ -10,15 +10,15 @@ export async function generateMetadata({
   params: { inviteCode: string };
 }): Promise<Metadata> {
   const inviteCode = params.inviteCode;
+  const version =
+    process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
 
   const url = `https://links.classiccariq.com/r/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Result";
   const description = "See how this Classic Car IQ challenge turned out.";
-  // Reuse the existing OG API endpoint for now so we avoid shipping a new
-  // binary asset while still giving crawlers a stable, cacheable URL.
-  const ogImage = `https://links.classiccariq.com/api/og/c/${encodeURIComponent(
+  const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(
     inviteCode,
-  )}`;
+  )}?v=${encodeURIComponent(version)}`;
 
   return {
     title,

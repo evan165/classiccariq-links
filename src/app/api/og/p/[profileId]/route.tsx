@@ -8,17 +8,17 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   _req: Request,
-  context: { params: Promise<{ inviteCode: string }> }
+  context: { params: Promise<{ profileId: string }> }
 ) {
   const site = process.env.SITE_URL ?? "https://links.classiccariq.com";
 
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "result",
+        variant: "profile",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge result",
-        cta: "Tap to view the recap",
+        headline: "Player Profile",
+        cta: "View stats in the app",
       }),
       { width: 1200, height: 630 }
     );
@@ -32,7 +32,7 @@ export async function GET(
   };
 
   try {
-    const { inviteCode } = await context.params;
+    const { profileId } = await context.params;
 
     if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       return await renderFallback();
@@ -40,41 +40,26 @@ export async function GET(
 
     const sb = supabaseServer();
 
-    const { data: challenge, error: chErr } = await sb
-      .from("challenges")
-      .select("challenger_profile_id, opponent_profile_id, invite_code")
-      .eq("invite_code", inviteCode)
+    const { data: profile, error } = await sb
+      .from("profiles")
+      .select("id, username, display_name, avatar_url")
+      .eq("id", profileId)
       .maybeSingle();
 
-    if (chErr || !challenge) {
+    if (error || !profile) {
       return await renderFallback();
     }
 
-    const ids = [challenge.challenger_profile_id, challenge.opponent_profile_id].filter(Boolean) as string[];
-
-    const { data: profiles } = await sb
-      .from("profiles")
-      .select("id, username, display_name, avatar_url")
-      .in("id", ids);
-
-    const byId = new Map((profiles ?? []).map((p) => [p.id, p]));
-
-    const challenger = byId.get(challenge.challenger_profile_id);
-    const opponent = challenge.opponent_profile_id ? byId.get(challenge.opponent_profile_id) : undefined;
-
-    const challengerName = challenger?.display_name || challenger?.username || "Someone";
-    const opponentName = opponent?.display_name || opponent?.username || "Opponent";
+    const username = profile.display_name || profile.username || "Player";
 
     const img = new ImageResponse(
       renderOg({
-        variant: "result",
+        variant: "profile",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge result",
-        cta: "Tap to view the recap",
-        challengerName,
-        challengerAvatarUrl: challenger?.avatar_url || undefined,
-        opponentName,
-        opponentAvatarUrl: opponent?.avatar_url || undefined,
+        headline: username,
+        cta: "View stats in the app",
+        username,
+        avatarUrl: profile.avatar_url || undefined,
       }),
       { width: 1200, height: 630 }
     );

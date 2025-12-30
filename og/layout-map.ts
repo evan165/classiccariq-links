@@ -1,5 +1,5 @@
 /**
- * OG Layout Map (6 variants)
+ * OG Layout Map (7 variants)
  * - This file is pure config + types (no Next/React imports)
  * - Renderer can consume this to produce images consistently.
  */
@@ -7,6 +7,7 @@
 export type OgVariant =
   | "invite"
   | "rematch"
+  | "result"
   | "daily"
   | "profile"
   | "app"
@@ -275,6 +276,61 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Tap to run it back",
+        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+      },
+      {
+        kind: "avatars",
+        x: 64,
+        y: 440,
+        size: 136,
+        gap: 18,
+        leftFrom: "challengerAvatarUrl",
+        rightFrom: "opponentAvatarUrl",
+        leftLabelFrom: "challengerName",
+        rightLabelFrom: "opponentName",
+      },
+    ],
+  },
+
+  result: {
+    width: 1200,
+    height: 630,
+    padding: 64,
+    fontFamily: "system-ui",
+    background: { color: OG_RENDER_RULES.colors.bg, dim: 0.0, blur: 0 },
+    defaults: {
+      theme: "dark",
+      brandName: "Classic Car IQ",
+      subtitle: "Challenge result",
+      cta: "Tap to view the recap",
+    },
+    blocks: [
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
+      {
+        kind: "title",
+        x: 168,
+        y: 78,
+        w: 968,
+        from: "brandName",
+        fallback: "Classic Car IQ",
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
+      },
+      {
+        kind: "headline",
+        x: 64,
+        y: 180,
+        w: 1072,
+        from: "subtitle",
+        fallback: "Challenge result",
+        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 332,
+        w: 980,
+        from: "cta",
+        fallback: "Tap to view the recap",
         style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
       },
       {
