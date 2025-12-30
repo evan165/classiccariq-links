@@ -44,7 +44,6 @@ function applyTextStyle(style: TextStyle): React.CSSProperties {
     opacity: style.opacity ?? 1,
     lineHeight: style.lineHeight ?? 1.25,
     letterSpacing: style.tracking ?? 0,
-    overflow: "hidden",
     textOverflow: "ellipsis",
     display: "-webkit-box",
     WebkitLineClamp: maxLines,
