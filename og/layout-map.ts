@@ -1,5 +1,5 @@
 /**
- * OG Layout Map (7 variants)
+ * OG Layout Map (6 variants)
  * - This file is pure config + types (no Next/React imports)
  * - Renderer can consume this to produce images consistently.
  */
@@ -7,7 +7,6 @@
 export type OgVariant =
   | "invite"
   | "rematch"
-  | "result"
   | "daily"
   | "profile"
   | "app"
@@ -292,7 +291,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
     ],
   },
 
-  result: {
+  daily: {
     width: 1200,
     height: 630,
     padding: 64,
@@ -301,8 +300,54 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
     defaults: {
       theme: "dark",
       brandName: "Classic Car IQ",
-      subtitle: "Challenge result",
-      cta: "Tap to view the recap",
+      dayLabel: "Daily IQ",
+      subtitle: "Today’s question",
+      cta: "Do you know it?",
+    },
+    blocks: [
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
+      {
+        kind: "title",
+        x: 168,
+        y: 78,
+        w: 968,
+        from: "dayLabel",
+        fallback: "Daily IQ",
+        style: { size: 45, weight: 800, opacity: 0.92, maxLines: 1 },
+      },
+      { kind: "pill", x: 64, y: 140, labelFrom: "category", valueFrom: "difficulty" },
+      {
+        kind: "headline",
+        x: 64,
+        y: 200,
+        w: 1072,
+        from: "question",
+        fallback: "Today’s question",
+        style: { size: 60, weight: 900, lineHeight: 1.08, maxLines: 4 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 520,
+        w: 980,
+        from: "cta",
+        fallback: "Do you know it?",
+        style: { size: 45, weight: 600, opacity: 0.85, maxLines: 1 },
+      },
+    ],
+  },
+
+  profile: {
+    width: 1200,
+    height: 630,
+    padding: 64,
+    fontFamily: "system-ui",
+    background: { color: OG_RENDER_RULES.colors.bg, dim: 0.0, blur: 0 },
+    defaults: {
+      theme: "dark",
+      brandName: "Classic Car IQ",
+      subtitle: "Player Profile",
+      cta: "View stats in the app",
     },
     blocks: [
       { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
@@ -316,37 +361,47 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
       },
       {
-        kind: "headline",
+        kind: "avatars",
         x: 64,
-        y: 180,
-        w: 1072,
-        from: "subtitle",
-        fallback: "Challenge result",
-        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
+        y: 170,
+        size: 140,
+        gap: 0,
+        leftFrom: "avatarUrl",
+        rightFrom: "opponentAvatarUrl",
+        leftLabelFrom: "username",
+      },
+      {
+        kind: "headline",
+        x: 240,
+        y: 205,
+        w: 880,
+        from: "headline",
+        fallback: "Player Profile",
+        style: { size: 64, weight: 900, lineHeight: 1.05, maxLines: 1 },
       },
       {
         kind: "subtitle",
-        x: 64,
-        y: 332,
-        w: 980,
+        x: 240,
+        y: 285,
+        w: 880,
         from: "cta",
-        fallback: "Tap to view the recap",
-        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+        fallback: "View stats in the app",
+        style: { size: 45, weight: 600, opacity: 0.85, maxLines: 1 },
       },
       {
-        kind: "avatars",
+        kind: "stats",
         x: 64,
-        y: 440,
-        size: 136,
-        gap: 18,
-        leftFrom: "challengerAvatarUrl",
-        rightFrom: "opponentAvatarUrl",
-        leftLabelFrom: "challengerName",
-        rightLabelFrom: "opponentName",
+        y: 390,
+        w: 1072,
+        items: [
+          { labelFrom: "statPrimaryLabel", valueFrom: "statPrimaryValue" },
+          { labelFrom: "statSecondaryLabel", valueFrom: "statSecondaryValue" },
+        ],
       },
     ],
   },
-  daily: {
+
+  app: {
     width: 1200,
     height: 630,
     padding: 64,
@@ -355,40 +410,85 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
     defaults: {
       theme: "dark",
       brandName: "Classic Car IQ",
-      subtitle: "Today’s Daily IQ is ready",
-      cta: "One shot, every day. Choose wisely.",
+      headline: "Classic Car IQ",
+      subhead: "Daily questions • Head-to-head • Streaks",
+      cta: "Play now",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
-      {
-        kind: "title",
-        x: 168,
-        y: 78,
-        w: 968,
-        from: "brandName",
-        fallback: "Classic Car IQ",
-        style: { size: 28, weight: 700, opacity: 0.92, maxLines: 1 },
-      },
+      { kind: "logo", x: 64, y: 64, size: 156, shape: "square" },
       {
         kind: "headline",
         x: 64,
-        y: 180,
+        y: 210,
         w: 1072,
-        from: "subtitle",
-        fallback: "Today’s Daily IQ is ready",
-        style: { size: 68, weight: 900, lineHeight: 1.04, maxLines: 2 },
+        from: "headline",
+        fallback: "Classic Car IQ",
+        style: { size: 92, weight: 900, lineHeight: 1.0, maxLines: 1 },
       },
       {
         kind: "subtitle",
         x: 64,
-        y: 332,
+        y: 320,
+        w: 980,
+        from: "subhead",
+        fallback: "Daily questions • Head-to-head • Streaks",
+        style: { size: 34, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 520,
         w: 980,
         from: "cta",
-        fallback: "One shot, every day. Choose wisely.",
-        style: { size: 30, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+        fallback: "Play now",
+        style: { size: 42, weight: 700, opacity: 0.9, maxLines: 1 },
       },
     ],
-  }
   },
 
-  profile: {
+  generic: {
+    width: 1200,
+    height: 630,
+    padding: 64,
+    fontFamily: "system-ui",
+    background: { color: OG_RENDER_RULES.colors.bg, dim: 0.0, blur: 0 },
+    defaults: {
+      theme: "dark",
+      brandName: "Classic Car IQ",
+      headline: "Classic Car IQ",
+      subhead: "Classic car trivia — built for daily play",
+      cta: "Open in app",
+    },
+    blocks: [
+      { kind: "logo", x: 64, y: 64, size: 120, shape: "square" },
+      {
+        kind: "headline",
+        x: 64,
+        y: 220,
+        w: 1072,
+        from: "headline",
+        fallback: "Classic Car IQ",
+        style: { size: 132, weight: 900, lineHeight: 1.0, maxLines: 1 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 330,
+        w: 980,
+        from: "subhead",
+        fallback: "Classic car trivia — built for daily play",
+        style: { size: 34, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 520,
+        w: 980,
+        from: "cta",
+        fallback: "Open in app",
+        style: { size: 42, weight: 700, opacity: 0.9, maxLines: 1 },
+      },
+    ],
+  },
+};
+

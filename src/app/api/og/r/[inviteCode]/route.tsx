@@ -15,7 +15,7 @@ export async function GET(
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "result",
+        variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
         subtitle: "Challenge result",
         cta: "Tap to view the recap",
@@ -67,7 +67,7 @@ export async function GET(
 
     const img = new ImageResponse(
       renderOg({
-        variant: "result",
+        variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
         subtitle: "Challenge result",
         cta: "Tap to view the recap",
