@@ -11,13 +11,13 @@ export async function GET() {
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "daily",
+        variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
         dayLabel: "Daily IQ",
         question: "Today’s challenge is live",
         category: "Classic Cars",
         difficulty: 3,
-        cta: "Tap to play",
+        cta: "One shot, every day. Choose wisely.",
       }),
       { width: 1200, height: 630 }
     );
