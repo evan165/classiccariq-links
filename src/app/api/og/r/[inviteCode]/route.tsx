@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 import { renderOg } from "../../../../../og/renderer";
-import { getChallengeByInviteCode } from "../../../../../og/data";
 
 export const runtime = "edge";
 
@@ -10,12 +9,12 @@ export async function GET(
 ) {
   const inviteCode = params.inviteCode;
 
-  const challenge = await getChallengeByInviteCode(inviteCode);
-
+  // TEMP: data loader is not present in this repo yet (no og/data.ts).
+  // We’ll re-wire the Supabase query after the build is green.
   const element = renderOg({
     variant: "result",
-    challenge,
-  });
+    inviteCode,
+  } as any);
 
   return new ImageResponse(element, { width: 1200, height: 630 });
 }
