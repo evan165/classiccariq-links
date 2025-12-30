@@ -163,7 +163,7 @@ export const OG_RENDER_RULES = {
     ellipsis: "…",
   },
   avatars: {
-    size: 104,
+    size: 136,
     shape: "circle" as const,
     ring: { width: 4, opacity: 0.25 },
   },
@@ -196,7 +196,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "Tap to open this challenge in the app",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
       {
         kind: "title",
         x: 168,
@@ -204,7 +204,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 968,
         from: "brandName",
         fallback: "Classic Car IQ",
-        style: { size: 28, weight: 700, opacity: 0.92, maxLines: 1 },
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
       },
       {
         kind: "headline",
@@ -213,7 +213,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 1072,
         from: "subtitle",
         fallback: "You’ve been challenged",
-        style: { size: 68, weight: 900, lineHeight: 1.04, maxLines: 2 },
+        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
       },
       {
         kind: "subtitle",
@@ -222,13 +222,13 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Tap to open this challenge in the app",
-        style: { size: 30, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
       },
       {
         kind: "avatars",
         x: 64,
         y: 440,
-        size: 104,
+        size: 136,
         gap: 18,
         leftFrom: "challengerAvatarUrl",
         rightFrom: "opponentAvatarUrl",
@@ -251,7 +251,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "Tap to run it back",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
       {
         kind: "title",
         x: 168,
@@ -259,7 +259,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 968,
         from: "brandName",
         fallback: "Classic Car IQ",
-        style: { size: 28, weight: 700, opacity: 0.92, maxLines: 1 },
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
       },
       {
         kind: "headline",
@@ -268,7 +268,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 1072,
         from: "subtitle",
         fallback: "Rematch request",
-        style: { size: 68, weight: 900, lineHeight: 1.04, maxLines: 2 },
+        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
       },
       {
         kind: "subtitle",
@@ -277,13 +277,13 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Tap to run it back",
-        style: { size: 30, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
       },
       {
         kind: "avatars",
         x: 64,
         y: 440,
-        size: 104,
+        size: 136,
         gap: 18,
         leftFrom: "challengerAvatarUrl",
         rightFrom: "opponentAvatarUrl",
@@ -307,7 +307,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "Do you know it?",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
       {
         kind: "title",
         x: 168,
@@ -315,7 +315,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 968,
         from: "dayLabel",
         fallback: "Daily IQ",
-        style: { size: 30, weight: 800, opacity: 0.92, maxLines: 1 },
+        style: { size: 45, weight: 800, opacity: 0.92, maxLines: 1 },
       },
       { kind: "pill", x: 64, y: 140, labelFrom: "category", valueFrom: "difficulty" },
       {
@@ -334,7 +334,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Do you know it?",
-        style: { size: 30, weight: 600, opacity: 0.85, maxLines: 1 },
+        style: { size: 45, weight: 600, opacity: 0.85, maxLines: 1 },
       },
     ],
   },
@@ -352,7 +352,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "View stats in the app",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
       {
         kind: "title",
         x: 168,
@@ -360,7 +360,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 968,
         from: "brandName",
         fallback: "Classic Car IQ",
-        style: { size: 28, weight: 700, opacity: 0.92, maxLines: 1 },
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
       },
       {
         kind: "avatars",
@@ -388,7 +388,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 880,
         from: "cta",
         fallback: "View stats in the app",
-        style: { size: 30, weight: 600, opacity: 0.85, maxLines: 1 },
+        style: { size: 45, weight: 600, opacity: 0.85, maxLines: 1 },
       },
       {
         kind: "stats",
@@ -443,7 +443,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Play now",
-        style: { size: 28, weight: 700, opacity: 0.9, maxLines: 1 },
+        style: { size: 42, weight: 700, opacity: 0.9, maxLines: 1 },
       },
     ],
   },
@@ -470,7 +470,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 1072,
         from: "headline",
         fallback: "Classic Car IQ",
-        style: { size: 88, weight: 900, lineHeight: 1.0, maxLines: 1 },
+        style: { size: 132, weight: 900, lineHeight: 1.0, maxLines: 1 },
       },
       {
         kind: "subtitle",
@@ -488,7 +488,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
         w: 980,
         from: "cta",
         fallback: "Open in app",
-        style: { size: 28, weight: 700, opacity: 0.9, maxLines: 1 },
+        style: { size: 42, weight: 700, opacity: 0.9, maxLines: 1 },
       },
     ],
   },
