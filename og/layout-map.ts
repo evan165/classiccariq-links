@@ -207,7 +207,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       {
         kind: "headline",
         x: 64,
-        y: 180,
+        y: 210,
         w: 1072,
         from: "subtitle",
         fallback: "You’ve been challenged",
