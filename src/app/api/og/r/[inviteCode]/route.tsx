@@ -5,6 +5,22 @@ import { supabaseServer } from "../../../../../lib/supabase-server";
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
+const isPng = (buf: ArrayBuffer) => {
+  const u8 = new Uint8Array(buf);
+  // PNG signature: 89 50 4E 47 0D 0A 1A 0A
+  return (
+    u8.length >= 8 &&
+    u8[0] === 0x89 &&
+    u8[1] === 0x50 &&
+    u8[2] === 0x4e &&
+    u8[3] === 0x47 &&
+    u8[4] === 0x0d &&
+    u8[5] === 0x0a &&
+    u8[6] === 0x1a &&
+    u8[7] === 0x0a
+  );
+};
+
 export async function GET(
   _req: Request,
   context: { params: Promise<{ inviteCode: string }> }
@@ -14,9 +30,9 @@ export async function GET(
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "result",
+        variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
-      } as any),
+      }),
       { width: 1200, height: 630 }
     );
 
@@ -37,7 +53,6 @@ export async function GET(
 
     const sb = supabaseServer();
 
-    // 1) Fetch challenge result by invite_code
     const { data: challenge, error: chErr } = await sb
       .from("challenges")
       .select(
@@ -50,7 +65,6 @@ export async function GET(
       return await renderFallback();
     }
 
-    // 2) Fetch profiles for avatars/names
     const ids = [challenge.challenger_profile_id, challenge.opponent_profile_id].filter(Boolean) as string[];
 
     const { data: profiles } = await sb
@@ -89,13 +103,20 @@ export async function GET(
       { width: 1200, height: 630 }
     );
 
-    return new Response(await img.arrayBuffer(), {
+    const buf = await img.arrayBuffer();
+
+    // If anything weird returns non-PNG bytes, don’t poison scrapers — return safe fallback PNG.
+    if (!isPng(buf)) {
+      return await renderFallback();
+    }
+
+    return new Response(buf, {
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=0, must-revalidate",
       },
     });
-  } catch (err) {
+  } catch (_err) {
     return await renderFallback();
   }
 }
