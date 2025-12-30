@@ -17,8 +17,8 @@ export async function GET(
       renderOg({
         variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge result",
-        cta: "Tap to view the recap",
+        subtitle: "Challenge complete",
+        cta: "Think you can do better\? Try it in the app",
       }),
       { width: 1200, height: 630 }
     );
@@ -69,8 +69,8 @@ export async function GET(
       renderOg({
         variant: "invite",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge result",
-        cta: "Tap to view the recap",
+        subtitle: "Challenge complete",
+        cta: "Think you can do better\? Try it in the app",
         challengerName,
         challengerAvatarUrl: challenger?.avatar_url || undefined,
         opponentName,
