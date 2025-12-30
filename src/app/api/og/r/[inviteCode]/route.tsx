@@ -1,32 +1,21 @@
 import { ImageResponse } from "next/og";
+import { renderOg } from "@/og/renderer";
+import { getChallengeByInviteCode } from "@/og/data";
 
 export const runtime = "edge";
 
-export async function GET() {
-  const img = new ImageResponse(
-    (
-      <div
-        style={{
-          width: "1200px",
-          height: "630px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 64,
-          fontWeight: 800,
-          background: "#000",
-          color: "#fff",
-        }}
-      >
-        OG ROUTE ALIVE
-      </div>
-    ),
-    { width: 1200, height: 630 }
-  );
+export async function GET(
+  _req: Request,
+  { params }: { params: { inviteCode: string } }
+) {
+  const inviteCode = params.inviteCode;
 
-  return new Response(await img.arrayBuffer(), {
-    headers: {
-      "Content-Type": "image/png",
-    },
+  const challenge = await getChallengeByInviteCode(inviteCode);
+
+  const element = renderOg({
+    variant: "result",
+    challenge,
   });
+
+  return new ImageResponse(element, { width: 1200, height: 630 });
 }
