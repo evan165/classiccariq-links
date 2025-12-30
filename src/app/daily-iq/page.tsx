@@ -4,9 +4,9 @@ import { DetourRedirect } from "@/app/components/DetourRedirect";
 
 export const runtime = "edge";
 
-// Temporary placeholder; a static OG image can be swapped in later without a
-// code change.
-const image = "https://links.classiccariq.com/favicon.ico";
+const ogVersion =
+  process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
+const image = `https://links.classiccariq.com/api/og/daily-iq?v=${encodeURIComponent(ogVersion)}`;
 
 export const metadata: Metadata = {
   title: "Classic Car IQ — Daily IQ",
