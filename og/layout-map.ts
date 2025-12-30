@@ -199,9 +199,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
       {
         kind: "title",
-        x: 168,
-        y: 78,
-        w: 968,
+        x: 220, y: 86, w: 916,
         from: "brandName",
         fallback: "Classic Car IQ",
         style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
