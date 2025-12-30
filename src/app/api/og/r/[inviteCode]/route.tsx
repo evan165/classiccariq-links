@@ -15,10 +15,10 @@ export async function GET(
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "invite",
+        variant: "result",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge complete",
-        cta: "Think you can do better\? Try it in the app",
+        subtitle: "Think you can do better?",
+        cta: "Tap to play this challenge in the app",
       }),
       { width: 1200, height: 630 }
     );
@@ -42,7 +42,7 @@ export async function GET(
 
     const { data: challenge, error: chErr } = await sb
       .from("challenges")
-      .select("challenger_profile_id, opponent_profile_id, invite_code")
+      .select("challenger_profile_id, opponent_profile_id, invite_code, challenger_score, opponent_score, challenger_duration_ms, opponent_duration_ms, winner_profile_id")
       .eq("invite_code", inviteCode)
       .maybeSingle();
 
@@ -63,18 +63,43 @@ export async function GET(
     const opponent = challenge.opponent_profile_id ? byId.get(challenge.opponent_profile_id) : undefined;
 
     const challengerName = challenger?.display_name || challenger?.username || "Someone";
+    const challengerScore = challenge.challenger_score != null ? `${challenge.challenger_score}/10` : undefined;
+    const opponentScore = challenge.opponent_score != null ? `${challenge.opponent_score}/10` : undefined;
+
+    const challengerTime =
+      challenge.challenger_duration_ms != null
+        ? `${Math.round(challenge.challenger_duration_ms / 1000)}s`
+        : undefined;
+
+    const opponentTime =
+      challenge.opponent_duration_ms != null
+        ? `${Math.round(challenge.opponent_duration_ms / 1000)}s`
+        : undefined;
+
+    const winner =
+      challenge.winner_profile_id === challenge.challenger_profile_id
+        ? "challenger"
+        : challenge.winner_profile_id === challenge.opponent_profile_id
+        ? "opponent"
+        : undefined;
+
     const opponentName = opponent?.display_name || opponent?.username || "Opponent";
 
     const img = new ImageResponse(
       renderOg({
-        variant: "invite",
+        variant: "result",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        subtitle: "Challenge complete",
-        cta: "Think you can do better\? Try it in the app",
+        subtitle: "Think you can do better?",
+        cta: "Tap to play this challenge in the app",
         challengerName,
         challengerAvatarUrl: challenger?.avatar_url || undefined,
         opponentName,
         opponentAvatarUrl: opponent?.avatar_url || undefined,
+        challengerScore,
+        challengerTime,
+        opponentScore,
+        opponentTime,
+        winner,
       }),
       { width: 1200, height: 630 }
     );

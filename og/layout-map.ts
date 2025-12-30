@@ -8,6 +8,7 @@ export type OgVariant =
   | "invite"
   | "rematch"
   | "daily"
+  | "result"
   | "profile"
   | "app"
   | "generic";
@@ -33,6 +34,13 @@ export type OgInput = {
   opponentAvatarUrl?: string;
   challengerName?: string; // e.g. "Mike"
   challengerAvatarUrl?: string;
+
+  // Result Matchup
+  challengerScore?: string; // e.g. "9/10"
+  challengerTime?: string; // e.g. "26s"
+  opponentScore?: string;   // e.g. "8/10"
+  opponentTime?: string;   // e.g. "31s"
+  winner?: "challenger" | "opponent";
 
   // Daily IQ
   question?: string; // the daily question text
@@ -104,16 +112,33 @@ export type LayoutBlock =
       labelFrom: "category" | "dayLabel";
       valueFrom?: "difficulty";
     }
-  | {
-      kind: "avatars";
+    | {
+        kind: "avatars";
+        x: number;
+        y: number;
+        size: number;
+        gap: number;
+        leftFrom: "challengerAvatarUrl" | "avatarUrl";
+        rightFrom: "opponentAvatarUrl";
+        leftLabelFrom?: "challengerName" | "username";
+        rightLabelFrom?: "opponentName";
+      }
+
+    | {
+        kind: "matchup";
       x: number;
       y: number;
       size: number;
       gap: number;
-      leftFrom: "challengerAvatarUrl" | "avatarUrl";
+      leftFrom: "challengerAvatarUrl";
       rightFrom: "opponentAvatarUrl";
-      leftLabelFrom?: "challengerName" | "username";
-      rightLabelFrom?: "opponentName";
+      leftLabelFrom: "challengerName";
+      rightLabelFrom: "opponentName";
+      leftScoreFrom: "challengerScore";
+      leftTimeFrom: "challengerTime";
+      rightScoreFrom: "opponentScore";
+      rightTimeFrom: "opponentTime";
+      winnerFrom: "winner";
     }
   | {
       kind: "stats";
@@ -396,6 +421,64 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       },
     ],
   },
+  result: {
+    width: 1200,
+    height: 630,
+    padding: 64,
+    fontFamily: "system-ui",
+    background: { color: OG_RENDER_RULES.colors.bg, dim: 0.0, blur: 0 },
+    defaults: {
+      theme: "dark",
+      brandName: "Classic Car IQ",
+      subtitle: "Think you can do better?",
+      cta: "Tap to play this challenge in the app",
+    },
+    blocks: [
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
+      {
+        kind: "title",
+        x: 220, y: 98, w: 916,
+        from: "brandName",
+        fallback: "Classic Car IQ",
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
+      },
+      {
+        kind: "headline",
+        x: 64,
+        y: 230,
+        w: 1072,
+        from: "subtitle",
+        fallback: "Think you can do better?",
+        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 352,
+        w: 980,
+        from: "cta",
+        fallback: "Tap to play this challenge in the app",
+        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+      },
+      {
+        kind: "matchup",
+        x: 64,
+        y: 440,
+        size: 136,
+        gap: 48,
+        leftFrom: "challengerAvatarUrl",
+        rightFrom: "opponentAvatarUrl",
+        leftLabelFrom: "challengerName",
+        rightLabelFrom: "opponentName",
+        leftScoreFrom: "challengerScore",
+        leftTimeFrom: "challengerTime",
+        rightScoreFrom: "opponentScore",
+        rightTimeFrom: "opponentTime",
+        winnerFrom: "winner",
+      },
+    ],
+  },
+
 
   app: {
     width: 1200,
