@@ -322,7 +322,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       };
 
       return (
-        <div key={`matchup-${block.x}-${block.y}`} style={{ position: "absolute", left: 0, top: 0 }}>
+        <div key={`matchup-${block.x}-${block.y}`} style={{ position: "absolute", left: 0, top: 0, display: "flex" }}>
           {/* Left avatar */}
           <div
             style={{
