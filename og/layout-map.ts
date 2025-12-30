@@ -417,7 +417,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "Play now",
     },
     blocks: [
-      { kind: "logo", x: 64, y: 64, size: 120, shape: "square" },
+      { kind: "logo", x: 64, y: 64, size: 156, shape: "square" },
       {
         kind: "headline",
         x: 64,
