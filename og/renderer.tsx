@@ -271,7 +271,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       const cardH = 150;
 
       return (
-        <div key={`stats-${block.x}-${block.y}`}>
+        <div key={`stats-${block.x}-${block.y}`} style={{ display: "flex" }}>
           {items.map((it, idx) => (
             <div
               key={`stat-${idx}`}
@@ -325,6 +325,7 @@ export function renderOg(input: OgInput) {
         color: OG_RENDER_RULES.colors.text,
         fontFamily: spec.fontFamily,
         position: "relative",
+        display: "flex",
       }}
     >
       {bgDim > 0 ? (
