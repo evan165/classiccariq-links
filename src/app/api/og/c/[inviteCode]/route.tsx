@@ -7,7 +7,7 @@ export async function GET(
   _req: Request,
   context: { params: Promise<{ inviteCode: string }> }
 ) {
-  const { inviteCode } = await context.params;
+  await context.params;
 
   const img = new ImageResponse(
     (
@@ -17,52 +17,52 @@ export async function GET(
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 80,
+          justifyContent: "center",
+          gap: 48,
+          padding: 96,
           background: "#0b0b0f",
           color: "#ffffff",
           fontFamily: "system-ui",
         }}
       >
-        {/* Top block */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 16 }}>
-            <div style={{ fontSize: 32, fontWeight: 800, opacity: 0.92 }}>Classic Car IQ</div>
-          </div>
-
-          <div style={{ fontSize: 76, fontWeight: 900, lineHeight: 1.05 }}>
-            You’ve been challenged
-          </div>
-
-          <div style={{ fontSize: 34, fontWeight: 500, opacity: 0.85, lineHeight: 1.25 }}>
-            Tap to open this challenge in the app
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <img
+            src="https://links.classiccariq.com/classic-car-iq-square.png"
+            width={96}
+            height={96}
+            style={{ borderRadius: 20 }}
+          />
+          <div style={{ fontSize: 40, fontWeight: 900, letterSpacing: -0.5 }}>
+            Classic Car IQ
           </div>
         </div>
 
-        {/* Bottom block */}
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ fontSize: 20, opacity: 0.65, letterSpacing: 1 }}>CHALLENGE</div>
-            <div style={{ fontSize: 44, fontWeight: 900, letterSpacing: 1 }}>{inviteCode}</div>
-          </div>
+        {/* Headline */}
+        <div style={{ fontSize: 84, fontWeight: 900, lineHeight: 1.05 }}>
+          You’ve been challenged
+        </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: 10,
-              padding: "16px 20px",
-              borderRadius: 999,
-              border: "2px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.06)",
-              fontSize: 26,
-              fontWeight: 700,
-              opacity: 0.95,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Open in app →
-          </div>
+        {/* Subhead */}
+        <div style={{ fontSize: 36, fontWeight: 500, opacity: 0.85 }}>
+          Think you know classic cars?
+        </div>
+
+        {/* CTA */}
+        <div
+          style={{
+            alignSelf: "flex-start",
+            marginTop: 16,
+            padding: "18px 28px",
+            borderRadius: 999,
+            border: "2px solid rgba(255,255,255,0.18)",
+            background: "rgba(255,255,255,0.06)",
+            fontSize: 28,
+            fontWeight: 800,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Open challenge →
         </div>
       </div>
     ),
