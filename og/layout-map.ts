@@ -303,6 +303,35 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       cta: "One shot, every day. Choose wisely.",
     },
     blocks: [
+      { kind: "logo", x: 64, y: 64, size: 132, shape: "square" },
+      {
+        kind: "title",
+        x: 220, y: 86, w: 916,
+        from: "brandName",
+        fallback: "Classic Car IQ",
+        style: { size: 42, weight: 700, opacity: 0.92, maxLines: 1 },
+      },
+      {
+        kind: "headline",
+        x: 64,
+        y: 210,
+        w: 1072,
+        from: "subtitle",
+        fallback: "Today’s Daily IQ is ready",
+        style: { size: 88, weight: 900, lineHeight: 1.04, maxLines: 2 },
+      },
+      {
+        kind: "subtitle",
+        x: 64,
+        y: 332,
+        w: 980,
+        from: "cta",
+        fallback: "One shot, every day. Choose wisely.",
+        style: { size: 45, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
+      },
+    ],
+  },
+    blocks: [
       { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
       {
         kind: "title",
