@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DetourRedirect } from "@/app/components/DetourRedirect";
+import { buildDetourTarget } from "@/lib/detour";
 
 export const runtime = "edge";
 
@@ -44,11 +45,9 @@ export default async function ChallengeResultPage({
 }) {
   const { inviteCode } = await params;
 
-  const detourBase = process.env.DETOUR_BASE_URL || "";
-  const normalizedBase = detourBase.replace(/\/+$/, "");
-  const detourTarget = normalizedBase
-    ? `${normalizedBase}/r/${encodeURIComponent(inviteCode)}`
-    : "";
+  const detourTarget = buildDetourTarget(
+    `challenges/${encodeURIComponent(inviteCode)}`,
+  );
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
