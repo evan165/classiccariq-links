@@ -21,17 +21,33 @@ function initials(name?: string) {
 }
 
 function applyTextStyle(style: TextStyle): React.CSSProperties {
+  const maxLines = style.maxLines ?? 1;
+
+  // @vercel/og + -webkit-box can clip descenders (g/y/p). Avoid it for single-line text.
+  if (maxLines <= 1) {
+    return {
+      fontSize: style.size,
+      fontWeight: style.weight,
+      opacity: style.opacity ?? 1,
+      lineHeight: style.lineHeight ?? 1.25,
+      letterSpacing: style.tracking ?? 0,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+      display: "block",
+    };
+  }
+
   return {
     fontSize: style.size,
     fontWeight: style.weight,
     opacity: style.opacity ?? 1,
     lineHeight: style.lineHeight ?? 1.25,
     letterSpacing: style.tracking ?? 0,
-    paddingBottom: 6,
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "-webkit-box",
-    WebkitLineClamp: style.maxLines ?? 1,
+    WebkitLineClamp: maxLines,
     WebkitBoxOrient: "vertical" as any,
     whiteSpace: "normal",
   };
