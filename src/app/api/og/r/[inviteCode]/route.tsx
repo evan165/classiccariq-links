@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic";
 
 const isPng = (buf: ArrayBuffer) => {
   const u8 = new Uint8Array(buf);
-  // PNG signature: 89 50 4E 47 0D 0A 1A 0A
   return (
     u8.length >= 8 &&
     u8[0] === 0x89 &&
@@ -21,6 +20,14 @@ const isPng = (buf: ArrayBuffer) => {
   );
 };
 
+const fmtScore = (n: number | null | undefined) => (typeof n === "number" ? `${n}/10` : undefined);
+
+const fmtTime = (ms: number | null | undefined) => {
+  if (typeof ms !== "number" || ms <= 0) return undefined;
+  const s = Math.round(ms / 1000);
+  return `${s}s`;
+};
+
 export async function GET(
   _req: Request,
   context: { params: Promise<{ inviteCode: string }> }
@@ -30,9 +37,11 @@ export async function GET(
   const renderFallback = async () => {
     const img = new ImageResponse(
       renderOg({
-        variant: "invite",
+        variant: "result",
         logoUrl: `${site}/classic-car-iq-square.png`,
-      }),
+        subtitle: "Think you can do better?",
+        cta: "Tap to play this challenge in the app",
+      } as any),
       { width: 1200, height: 630 }
     );
 
@@ -80,35 +89,35 @@ export async function GET(
     const challengerName = challenger?.display_name || challenger?.username || "Someone";
     const opponentName = opponent?.display_name || opponent?.username || "You";
 
+    const winner: "challenger" | "opponent" | undefined =
+      challenge.winner_profile_id &&
+      challenge.winner_profile_id === challenge.challenger_profile_id
+        ? "challenger"
+        : challenge.winner_profile_id &&
+          challenge.opponent_profile_id &&
+          challenge.winner_profile_id === challenge.opponent_profile_id
+        ? "opponent"
+        : undefined;
+
     const img = new ImageResponse(
       renderOg({
         variant: "result",
         logoUrl: `${site}/classic-car-iq-square.png`,
-        inviteCode: challenge.invite_code,
-
         challengerName,
         challengerAvatarUrl: challenger?.avatar_url || undefined,
-        challengerScore: challenge.challenger_score ?? undefined,
-        challengerDurationMs: challenge.challenger_duration_ms ?? undefined,
-
         opponentName,
         opponentAvatarUrl: opponent?.avatar_url || undefined,
-        opponentScore: challenge.opponent_score ?? undefined,
-        opponentDurationMs: challenge.opponent_duration_ms ?? undefined,
-
-        winnerProfileId: challenge.winner_profile_id ?? undefined,
-        challengerProfileId: challenge.challenger_profile_id ?? undefined,
-        opponentProfileId: challenge.opponent_profile_id ?? undefined,
+        challengerScore: fmtScore(challenge.challenger_score),
+        challengerTime: fmtTime(challenge.challenger_duration_ms),
+        opponentScore: fmtScore(challenge.opponent_score),
+        opponentTime: fmtTime(challenge.opponent_duration_ms),
+        winner,
       } as any),
       { width: 1200, height: 630 }
     );
 
     const buf = await img.arrayBuffer();
-
-    // If anything weird returns non-PNG bytes, don’t poison scrapers — return safe fallback PNG.
-    if (!isPng(buf)) {
-      return await renderFallback();
-    }
+    if (!isPng(buf)) return await renderFallback();
 
     return new Response(buf, {
       headers: {
