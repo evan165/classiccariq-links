@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { DetourRedirect } from "@/app/components/DetourRedirect";
+
 export const runtime = "edge";
 
 type Props = {
@@ -43,8 +45,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InvitePage({ params }: Props) {
   const { inviteCode } = await params;
 
+  const detourBase = process.env.DETOUR_BASE_URL || "";
+  const normalizedBase = detourBase.replace(/\/+$/, "");
+  const detourTarget = normalizedBase
+    ? `${normalizedBase}/c/${encodeURIComponent(inviteCode)}`
+    : "";
+
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
+      <DetourRedirect target={detourTarget} />
       <h1>Classic Car IQ</h1>
       <p>
         Challenge invite: <strong>{inviteCode}</strong>
