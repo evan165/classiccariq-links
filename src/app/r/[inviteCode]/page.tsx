@@ -7,9 +7,10 @@ export const runtime = "edge";
 export async function generateMetadata({
   params,
 }: {
-  params: { inviteCode: string };
+  params: Promise<{ inviteCode: string }>;
 }): Promise<Metadata> {
-  const inviteCode = params.inviteCode;
+  const { inviteCode } = await params;
+
   const version =
     process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
 
@@ -17,7 +18,7 @@ export async function generateMetadata({
   const title = "Classic Car IQ — Challenge Result";
   const description = "See how this Classic Car IQ challenge turned out.";
   const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(
-    inviteCode,
+    inviteCode
   )}?v=${encodeURIComponent(version)}`;
 
   return {
@@ -39,12 +40,13 @@ export async function generateMetadata({
   };
 }
 
-export default function ChallengeResultPage({
+export default async function ChallengeResultPage({
   params,
 }: {
-  params: { inviteCode: string };
+  params: Promise<{ inviteCode: string }>;
 }) {
-  const inviteCode = params.inviteCode;
+  const { inviteCode } = await params;
+
   const detourBase = process.env.DETOUR_BASE_URL || "";
   const normalizedBase = detourBase.replace(/\/+$/, "");
   const detourTarget = normalizedBase
@@ -55,7 +57,9 @@ export default function ChallengeResultPage({
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
       <DetourRedirect target={detourTarget} />
       <h1>Classic Car IQ</h1>
-      <p>Challenge result: <strong>{inviteCode}</strong></p>
+      <p>
+        Challenge result: <strong>{inviteCode}</strong>
+      </p>
       <p>If you aren’t redirected automatically, open the Classic Car IQ app.</p>
     </main>
   );
