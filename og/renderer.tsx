@@ -25,7 +25,7 @@ function applyTextStyle(style: TextStyle): React.CSSProperties {
     fontSize: style.size,
     fontWeight: style.weight,
     opacity: style.opacity ?? 1,
-    lineHeight: style.lineHeight ?? 1.1,
+    lineHeight: style.lineHeight ?? 1.25,
     letterSpacing: style.tracking ?? 0,
     overflow: "hidden",
     textOverflow: "ellipsis",
