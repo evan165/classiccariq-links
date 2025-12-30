@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { renderOg } from "../../../../../og/renderer";
+import { renderOg } from "../../../../../../og/renderer";
 
 export const runtime = "edge";
 
