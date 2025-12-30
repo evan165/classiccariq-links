@@ -128,6 +128,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             top: block.y,
             width: block.w,
             color: OG_RENDER_RULES.colors.text,
+            display: "flex",
             ...applyTextStyle(block.style),
           }}
         >
@@ -147,6 +148,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             top: block.y,
             width: block.w,
             color: OG_RENDER_RULES.colors.text,
+            display: "flex",
             ...applyTextStyle(block.style),
           }}
         >
@@ -166,6 +168,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             top: block.y,
             width: block.w,
             color: OG_RENDER_RULES.colors.textMuted,
+            display: "flex",
             ...applyTextStyle(block.style),
           }}
         >
