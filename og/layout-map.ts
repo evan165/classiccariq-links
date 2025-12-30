@@ -331,37 +331,6 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       },
     ],
   },
-    blocks: [
-      { kind: "logo", x: 64, y: 64, size: 88, shape: "square" },
-      {
-        kind: "title",
-        x: 188,
-        y: 78,
-        w: 948,
-        from: "brandName",
-        fallback: "Classic Car IQ",
-        style: { size: 28, weight: 700, opacity: 0.92, maxLines: 1 },
-      },
-      {
-        kind: "headline",
-        x: 64,
-        y: 220,
-        w: 1072,
-        from: "subtitle",
-        fallback: "Today’s Daily IQ is ready",
-        style: { size: 68, weight: 900, lineHeight: 1.04, maxLines: 2 },
-      },
-      {
-        kind: "subtitle",
-        x: 64,
-        y: 372,
-        w: 980,
-        from: "cta",
-        fallback: "One shot, every day. Choose wisely.",
-        style: { size: 30, weight: 600, opacity: 0.85, lineHeight: 1.2, maxLines: 2 },
-      },
-    ],
-  },
 
   
   profile: {
