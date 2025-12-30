@@ -314,7 +314,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       {
         kind: "headline",
         x: 64,
-        y: 222,
+        y: 266,
         w: 1072,
         from: "subtitle",
         fallback: "Today’s Daily IQ is ready",
@@ -323,7 +323,7 @@ export const OG_LAYOUT_MAP: Record<OgVariant, LayoutSpec> = {
       {
         kind: "subtitle",
         x: 64,
-        y: 344,
+        y: 388,
         w: 980,
         from: "cta",
         fallback: "One shot, every day. Choose wisely.",
