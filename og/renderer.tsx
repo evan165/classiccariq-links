@@ -270,6 +270,167 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       );
     }
 
+    case "matchup": {
+      const leftUrl = (input as any)[block.leftFrom] as string | undefined;
+      const rightUrl = (input as any)[block.rightFrom] as string | undefined;
+
+      const leftLabel = (input as any)[block.leftLabelFrom] as string | undefined;
+      const rightLabel = (input as any)[block.rightLabelFrom] as string | undefined;
+
+      const leftScore = (input as any)[block.leftScoreFrom] as string | undefined;
+      const leftTime = (input as any)[block.leftTimeFrom] as string | undefined;
+      const rightScore = (input as any)[block.rightScoreFrom] as string | undefined;
+      const rightTime = (input as any)[block.rightTimeFrom] as string | undefined;
+
+      const winner = (input as any)[block.winnerFrom] as ("challenger" | "opponent" | undefined);
+
+      const size = block.size;
+      const gap = block.gap;
+
+      const leftX = block.x;
+      const rightX = block.x + size + gap;
+
+      // winner ring emphasis (subtle)
+      const leftRing = winner === "challenger" ? { width: 6, opacity: 0.55 } : { width: OG_RENDER_RULES.avatars.ring.width, opacity: OG_RENDER_RULES.avatars.ring.opacity };
+      const rightRing = winner === "opponent" ? { width: 6, opacity: 0.55 } : { width: OG_RENDER_RULES.avatars.ring.width, opacity: OG_RENDER_RULES.avatars.ring.opacity };
+
+      const labelStyle = {
+        position: "absolute" as const,
+        top: block.y + size + 14,
+        width: size,
+        fontSize: 20,
+        fontWeight: 800,
+        opacity: 0.85,
+        textAlign: "center" as const,
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap" as const,
+      };
+
+      const statStyleLabel = {
+        fontSize: 18,
+        fontWeight: 900 as const,
+        letterSpacing: 0.8,
+        opacity: 0.65,
+      };
+
+      const statStyleValue = {
+        fontSize: 40,
+        fontWeight: 900 as const,
+        letterSpacing: -0.4,
+        lineHeight: 1.0,
+      };
+
+      return (
+        <div key={`matchup-${block.x}-${block.y}`} style={{ position: "absolute", left: 0, top: 0 }}>
+          {/* Left avatar */}
+          <div
+            style={{
+              position: "absolute",
+              left: leftX,
+              top: block.y,
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              border: `${leftRing.width}px solid rgba(255,255,255,${leftRing.opacity})`,
+              background: "rgba(255,255,255,0.06)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            {leftUrl ? (
+              <img src={leftUrl} width={size} height={size} style={{ objectFit: "cover" }} />
+            ) : (
+              <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
+                {initials(leftLabel)}
+              </div>
+            )}
+          </div>
+
+          {/* Right avatar */}
+          <div
+            style={{
+              position: "absolute",
+              left: rightX,
+              top: block.y,
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              border: `${rightRing.width}px solid rgba(255,255,255,${rightRing.opacity})`,
+              background: "rgba(255,255,255,0.06)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            {rightUrl ? (
+              <img src={rightUrl} width={size} height={size} style={{ objectFit: "cover" }} />
+            ) : (
+              <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
+                {initials(rightLabel)}
+              </div>
+            )}
+          </div>
+
+          {/* Labels */}
+          {leftLabel ? <div style={{ ...labelStyle, left: leftX }}>{leftLabel}</div> : null}
+          {rightLabel ? <div style={{ ...labelStyle, left: rightX }}>{rightLabel}</div> : null}
+
+          {/* Stats under each avatar */}
+          <div
+            style={{
+              position: "absolute",
+              left: leftX,
+              top: block.y + size + 50,
+              width: size,
+              textAlign: "center",
+              color: OG_RENDER_RULES.colors.textMuted,
+            }}
+          >
+            {leftScore ? (
+              <div>
+                <div style={statStyleLabel}>SCORE</div>
+                <div style={statStyleValue}>{leftScore}</div>
+              </div>
+            ) : null}
+            {leftTime ? (
+              <div style={{ marginTop: 8 }}>
+                <div style={statStyleLabel}>TIME</div>
+                <div style={{ ...statStyleValue, fontSize: 34 }}>{leftTime}</div>
+              </div>
+            ) : null}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              left: rightX,
+              top: block.y + size + 50,
+              width: size,
+              textAlign: "center",
+              color: OG_RENDER_RULES.colors.textMuted,
+            }}
+          >
+            {rightScore ? (
+              <div>
+                <div style={statStyleLabel}>SCORE</div>
+                <div style={statStyleValue}>{rightScore}</div>
+              </div>
+            ) : null}
+            {rightTime ? (
+              <div style={{ marginTop: 8 }}>
+                <div style={statStyleLabel}>TIME</div>
+                <div style={{ ...statStyleValue, fontSize: 34 }}>{rightTime}</div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      );
+    }
+
     case "stats": {
       const items = block.items
         .map((it) => {
