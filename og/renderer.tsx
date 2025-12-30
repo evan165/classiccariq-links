@@ -12,6 +12,14 @@ function resolveText(input: OgInput, from: any, fallback: string) {
   return fallback;
 }
 
+function initials(name?: string) {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const a = parts[0]?.[0] ?? "?";
+  const b = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
+  return (a + b).toUpperCase();
+}
+
 function applyTextStyle(style: TextStyle): React.CSSProperties {
   return {
     fontSize: style.size,
@@ -19,13 +27,57 @@ function applyTextStyle(style: TextStyle): React.CSSProperties {
     opacity: style.opacity ?? 1,
     lineHeight: style.lineHeight ?? 1.1,
     letterSpacing: style.tracking ?? 0,
-    display: "block",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    // next/og supports WebKit line clamp via these properties    WebkitLineClamp: style.maxLines ?? 1,
+    display: "-webkit-box",
+    WebkitLineClamp: style.maxLines ?? 1,
     WebkitBoxOrient: "vertical" as any,
     whiteSpace: "normal",
   };
+}
+
+function Avatar({
+  x,
+  y,
+  size,
+  src,
+  label,
+}: {
+  x: number;
+  y: number;
+  size: number;
+  src?: string;
+  label?: string;
+}) {
+  const ringW = OG_RENDER_RULES.avatars.ring.width;
+  const ringOpacity = OG_RENDER_RULES.avatars.ring.opacity;
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        border: `${ringW}px solid rgba(255,255,255,${ringOpacity})`,
+        background: "rgba(255,255,255,0.06)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      {src ? (
+        <img src={src} width={size} height={size} style={{ objectFit: "cover" }} />
+      ) : (
+        <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
+          {initials(label)}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function renderBlock(block: LayoutBlock, input: OgInput) {
@@ -59,6 +111,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             left: block.x,
             top: block.y,
             width: block.w,
+            color: OG_RENDER_RULES.colors.text,
             ...applyTextStyle(block.style),
           }}
         >
@@ -77,6 +130,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             left: block.x,
             top: block.y,
             width: block.w,
+            color: OG_RENDER_RULES.colors.text,
             ...applyTextStyle(block.style),
           }}
         >
@@ -86,8 +140,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
     }
 
     case "subtitle": {
-      const text =
-        resolveText(input, block.from, (block.fallback ?? "").toString()) || (block.fallback ?? "");
+      const text = resolveText(input, block.from, block.fallback ?? "");
       return (
         <div
           key={`subtitle-${block.x}-${block.y}`}
@@ -96,6 +149,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             left: block.x,
             top: block.y,
             width: block.w,
+            color: OG_RENDER_RULES.colors.textMuted,
             ...applyTextStyle(block.style),
           }}
         >
@@ -104,11 +158,149 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       );
     }
 
-    // Not used for invite yet (we'll implement next)
-    case "pill":
-    case "avatars":
-    case "stats":
-      return null;
+    case "pill": {
+      const label = resolveText(input, block.labelFrom, "");
+      const diff = (block.valueFrom ? (input as any)[block.valueFrom] : undefined) as number | undefined;
+      const show = (label && label.length > 0) || (typeof diff === "number" && diff >= 1);
+      if (!show) return null;
+
+      const pillText =
+        label && typeof diff === "number" ? `${label} • ${"★".repeat(clamp(diff, 1, 5))}` : label || `Difficulty • ${"★".repeat(clamp(diff ?? 1, 1, 5))}`;
+
+      return (
+        <div
+          key={`pill-${block.x}-${block.y}`}
+          style={{
+            position: "absolute",
+            left: block.x,
+            top: block.y,
+            padding: "10px 14px",
+            borderRadius: 999,
+            background: OG_RENDER_RULES.colors.card,
+            border: `2px solid ${OG_RENDER_RULES.colors.stroke}`,
+            color: OG_RENDER_RULES.colors.textMuted,
+            fontSize: 22,
+            fontWeight: 800,
+            letterSpacing: 0.2,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {pillText}
+        </div>
+      );
+    }
+
+    case "avatars": {
+      const leftUrl = (input as any)[block.leftFrom] as string | undefined;
+      const rightUrl = (input as any)[block.rightFrom] as string | undefined;
+
+      const leftLabel = block.leftLabelFrom ? ((input as any)[block.leftLabelFrom] as string | undefined) : undefined;
+      const rightLabel = block.rightLabelFrom ? ((input as any)[block.rightLabelFrom] as string | undefined) : undefined;
+
+      const size = block.size;
+      const gap = block.gap;
+
+      // If only one avatar is relevant (profile), render left only.
+      const renderRight = !!rightUrl || !!rightLabel;
+
+      return (
+        <div key={`avatars-${block.x}-${block.y}`}>
+          <Avatar x={block.x} y={block.y} size={size} src={leftUrl} label={leftLabel} />
+          {renderRight ? (
+            <Avatar x={block.x + size + gap} y={block.y} size={size} src={rightUrl} label={rightLabel} />
+          ) : null}
+
+          {/* labels (optional) */}
+          {leftLabel ? (
+            <div
+              style={{
+                position: "absolute",
+                left: block.x,
+                top: block.y + size + 14,
+                width: size,
+                fontSize: 20,
+                fontWeight: 800,
+                opacity: 0.85,
+                textAlign: "center",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {leftLabel}
+            </div>
+          ) : null}
+
+          {renderRight && rightLabel ? (
+            <div
+              style={{
+                position: "absolute",
+                left: block.x + size + gap,
+                top: block.y + size + 14,
+                width: size,
+                fontSize: 20,
+                fontWeight: 800,
+                opacity: 0.85,
+                textAlign: "center",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {rightLabel}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    case "stats": {
+      const items = block.items
+        .map((it) => {
+          const label = resolveText(input, it.labelFrom, "");
+          const value = resolveText(input, it.valueFrom, "");
+          if (!label || !value) return null;
+          return { label, value };
+        })
+        .filter(Boolean) as Array<{ label: string; value: string }>;
+
+      if (items.length === 0) return null;
+
+      const gap = 20;
+      const cardW = Math.floor((block.w - gap * (items.length - 1)) / items.length);
+      const cardH = 150;
+
+      return (
+        <div key={`stats-${block.x}-${block.y}`}>
+          {items.map((it, idx) => (
+            <div
+              key={`stat-${idx}`}
+              style={{
+                position: "absolute",
+                left: block.x + idx * (cardW + gap),
+                top: block.y,
+                width: cardW,
+                height: cardH,
+                borderRadius: 24,
+                background: OG_RENDER_RULES.colors.card,
+                border: `2px solid ${OG_RENDER_RULES.colors.stroke}`,
+                padding: 22,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ fontSize: 20, fontWeight: 800, opacity: 0.65, letterSpacing: 0.6 }}>
+                {it.label.toUpperCase()}
+              </div>
+              <div style={{ fontSize: 56, fontWeight: 900, letterSpacing: -0.5, lineHeight: 1.0 }}>
+                {it.value}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
 
     default:
       return null;
@@ -116,16 +308,12 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
 }
 
 export function renderOg(input: OgInput) {
-  const variant = input.variant;
-  const spec = OG_LAYOUT_MAP[variant];
-
+  const spec = OG_LAYOUT_MAP[input.variant];
   const bgDim = clamp(input.backgroundDim ?? spec.background.dim, 0, 1);
-  const backgroundColor = spec.background.color;
 
   const merged: OgInput = {
     ...spec.defaults,
     ...input,
-    logoSize: input.logoSize ?? spec.defaults.logoSize ?? OG_RENDER_RULES.logo.defaultSize,
   };
 
   return (
@@ -133,13 +321,12 @@ export function renderOg(input: OgInput) {
       style={{
         width: spec.width,
         height: spec.height,
-        background: backgroundColor,
+        background: spec.background.color,
         color: OG_RENDER_RULES.colors.text,
         fontFamily: spec.fontFamily,
         position: "relative",
       }}
     >
-      {/* simple dim overlay (kept for future background images) */}
       {bgDim > 0 ? (
         <div
           style={{
