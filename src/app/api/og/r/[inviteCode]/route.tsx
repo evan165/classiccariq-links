@@ -11,6 +11,7 @@ export async function GET(
   context: { params: Promise<{ inviteCode: string }> }
 ) {
   const site = process.env.SITE_URL ?? "https://links.classiccariq.com";
+  const hasEnv = !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 
   const renderFallback = async () => {
     const img = new ImageResponse(
@@ -27,6 +28,7 @@ export async function GET(
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=0, must-revalidate",
+        "x-debug-has-sb-env": String(hasEnv),
       },
     });
   };
@@ -108,6 +110,7 @@ export async function GET(
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=0, must-revalidate",
+        "x-debug-has-sb-env": String(hasEnv),
       },
     });
   } catch (_err) {
