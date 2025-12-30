@@ -204,7 +204,10 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       const renderRight = !!rightUrl || !!rightLabel;
 
       return (
-        <div key={`avatars-${block.x}-${block.y}`}>
+        <div
+          key={`avatars-${block.x}-${block.y}`}
+          style={{ position: "absolute", left: 0, top: 0, display: "flex" }}
+        >
           <Avatar x={block.x} y={block.y} size={size} src={leftUrl} label={leftLabel} />
           {renderRight ? (
             <Avatar x={block.x + size + gap} y={block.y} size={size} src={rightUrl} label={rightLabel} />
@@ -271,7 +274,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
       const cardH = 150;
 
       return (
-        <div key={`stats-${block.x}-${block.y}`}>
+        <div key={`stats-${block.x}-${block.y}`} style={{ display: "flex" }}>
           {items.map((it, idx) => (
             <div
               key={`stat-${idx}`}
@@ -325,6 +328,7 @@ export function renderOg(input: OgInput) {
         color: OG_RENDER_RULES.colors.text,
         fontFamily: spec.fontFamily,
         position: "relative",
+        display: "flex",
       }}
     >
       {bgDim > 0 ? (
