@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
-import { renderOg } from "@/og/renderer";
-import { getChallengeByInviteCode } from "@/og/data";
+import { renderOg } from "../../../../../og/renderer";
+import { getChallengeByInviteCode } from "../../../../../og/data";
 
 export const runtime = "edge";
 
