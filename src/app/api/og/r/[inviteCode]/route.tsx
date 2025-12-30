@@ -8,14 +8,26 @@ export async function GET(
   _req: NextRequest,
   context: { params: Promise<{ inviteCode: string }> }
 ) {
-  const { inviteCode } = await context.params;
+  try {
+    const { inviteCode } = await context.params;
 
-  // TEMP: data loader is not present in this repo yet (no og/data.ts).
-  // We’ll re-wire the Supabase query after the build is green.
-  const element = renderOg({
-    variant: "result",
-    inviteCode,
-  } as any);
+    const element = renderOg({
+      variant: "result",
+      inviteCode,
+    } as any);
 
-  return new ImageResponse(element, { width: 1200, height: 630 });
+    return new ImageResponse(element, { width: 1200, height: 630 });
+  } catch (err: any) {
+    const msg =
+      typeof err?.stack === "string"
+        ? err.stack
+        : typeof err?.message === "string"
+        ? err.message
+        : String(err);
+
+    return new Response(`OG ERROR:\n${msg}\n`, {
+      status: 500,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
 }
