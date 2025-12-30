@@ -10,18 +10,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { inviteCode } = await params;
 
-  const version =
-    process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
-
-  // Extra cache-buster to prevent scrapers from reusing an old og:image fetch
-  const cb = Date.now().toString();
-
   const url = `https://links.classiccariq.com/r/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Result";
   const description = "See how this Classic Car IQ challenge turned out.";
-  const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(
-    inviteCode
-  )}?v=${encodeURIComponent(version)}&cb=${encodeURIComponent(cb)}`;
+
+  // Single query param only (prevents &amp; escaping issues)
+  const cb = Date.now().toString();
+  const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(inviteCode)}?cb=${encodeURIComponent(cb)}`;
 
   return {
     title,
