@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   description: "Classic Car IQ share links.",
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico?v=4c32daa" },
+      { url: "/icon.png?v=4c32daa", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    apple: [{ url: "/apple-touch-icon.png?v=4c32daa" }],
   },
 };
 
