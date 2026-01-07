@@ -8,28 +8,27 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const site = process.env.SITE_URL ?? "https://links.classiccariq.com";
 
-  const renderFallback = async () => {
-    const img = new ImageResponse(
+  const headers: HeadersInit = {
+    "Content-Type": "image/png",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control":
+      "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
+  };
+
+  const renderFallback = () =>
+    new ImageResponse(
       renderOg({
         variant: "daily",
-        logoUrl: `https://links.classiccariq.com/classic-car-iq-square.png`,
+        logoUrl: `${site}/classic-car-iq-square.png`,
         subtitle: "Today’s Daily IQ is ready",
         cta: "One shot, every day. Choose wisely.",
       }),
-      { width: 1200, height: 630 }
+      { width: 1200, height: 630, headers }
     );
 
-    return new Response(await img.arrayBuffer(), {
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=0, must-revalidate",
-      },
-    });
-  };
-
   try {
-    return await renderFallback();
-  } catch (_err) {
-    return await renderFallback();
+    return renderFallback();
+  } catch {
+    return renderFallback();
   }
 }

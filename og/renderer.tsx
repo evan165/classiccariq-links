@@ -6,8 +6,8 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
-function resolveText(input: OgInput, from: any, fallback: string) {
-  const v = (input as any)[from];
+function resolveText<K extends keyof OgInput>(input: OgInput, from: K, fallback: string) {
+  const v = input[from];
   if (typeof v === "string" && v.trim().length > 0) return v.trim();
   return fallback;
 }
@@ -47,7 +47,7 @@ function applyTextStyle(style: TextStyle): React.CSSProperties {
     textOverflow: "ellipsis",
     display: "-webkit-box",
     WebkitLineClamp: maxLines,
-    WebkitBoxOrient: "vertical" as any,
+    WebkitBoxOrient: "vertical",
     whiteSpace: "normal",
   };
 }
@@ -86,7 +86,7 @@ function Avatar({
       }}
     >
       {src ? (
-        <img src={src} width={size} height={size} style={{ objectFit: "cover" }} />
+        <img src={src} alt="" width={size} height={size} style={{ objectFit: "cover" }} />
       ) : (
         <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
           {initials(label)}
@@ -105,6 +105,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
         <img
           key={`logo-${block.x}-${block.y}`}
           src={src}
+          alt=""
           width={block.size}
           height={block.size}
           style={{
@@ -179,7 +180,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
 
     case "pill": {
       const label = resolveText(input, block.labelFrom, "");
-      const diff = (block.valueFrom ? (input as any)[block.valueFrom] : undefined) as number | undefined;
+      const diff = block.valueFrom ? input[block.valueFrom] : undefined;
       const show = (label && label.length > 0) || (typeof diff === "number" && diff >= 1);
       if (!show) return null;
 
@@ -210,11 +211,11 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
     }
 
     case "avatars": {
-      const leftUrl = (input as any)[block.leftFrom] as string | undefined;
-      const rightUrl = (input as any)[block.rightFrom] as string | undefined;
+      const leftUrl = input[block.leftFrom] as string | undefined;
+      const rightUrl = input[block.rightFrom] as string | undefined;
 
-      const leftLabel = block.leftLabelFrom ? ((input as any)[block.leftLabelFrom] as string | undefined) : undefined;
-      const rightLabel = block.rightLabelFrom ? ((input as any)[block.rightLabelFrom] as string | undefined) : undefined;
+      const leftLabel = block.leftLabelFrom ? (input[block.leftLabelFrom] as string | undefined) : undefined;
+      const rightLabel = block.rightLabelFrom ? (input[block.rightLabelFrom] as string | undefined) : undefined;
 
       const size = block.size;
       const gap = block.gap;
@@ -274,18 +275,18 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
     }
 
     case "matchup": {
-      const leftUrl = (input as any)[block.leftFrom] as string | undefined;
-      const rightUrl = (input as any)[block.rightFrom] as string | undefined;
+      const leftUrl = input[block.leftFrom] as string | undefined;
+      const rightUrl = input[block.rightFrom] as string | undefined;
 
-      const leftLabel = (input as any)[block.leftLabelFrom] as string | undefined;
-      const rightLabel = (input as any)[block.rightLabelFrom] as string | undefined;
+      const leftLabel = input[block.leftLabelFrom] as string | undefined;
+      const rightLabel = input[block.rightLabelFrom] as string | undefined;
 
-      const leftScore = (input as any)[block.leftScoreFrom] as string | undefined;
-      const leftTime = (input as any)[block.leftTimeFrom] as string | undefined;
-      const rightScore = (input as any)[block.rightScoreFrom] as string | undefined;
-      const rightTime = (input as any)[block.rightTimeFrom] as string | undefined;
+      const leftScore = input[block.leftScoreFrom] as string | undefined;
+      const leftTime = input[block.leftTimeFrom] as string | undefined;
+      const rightScore = input[block.rightScoreFrom] as string | undefined;
+      const rightTime = input[block.rightTimeFrom] as string | undefined;
 
-      const winner = (input as any)[block.winnerFrom] as ("challenger" | "opponent" | undefined);
+      const winner = input[block.winnerFrom] as "challenger" | "opponent" | undefined;
 
       const size = block.size;
       const gap = block.gap;
@@ -344,7 +345,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             }}
           >
             {leftUrl ? (
-              <img src={leftUrl} width={size} height={size} style={{ objectFit: "cover" }} />
+              <img src={leftUrl} alt="" width={size} height={size} style={{ objectFit: "cover" }} />
             ) : (
               <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
                 {initials(leftLabel)}
@@ -370,7 +371,7 @@ function renderBlock(block: LayoutBlock, input: OgInput) {
             }}
           >
             {rightUrl ? (
-              <img src={rightUrl} width={size} height={size} style={{ objectFit: "cover" }} />
+              <img src={rightUrl} alt="" width={size} height={size} style={{ objectFit: "cover" }} />
             ) : (
               <div style={{ fontSize: Math.floor(size * 0.34), fontWeight: 900, opacity: 0.9 }}>
                 {initials(rightLabel)}

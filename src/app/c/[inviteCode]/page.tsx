@@ -13,14 +13,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { inviteCode } = await params;
 
   const base = "https://links.classiccariq.com";
-  const url = `${base}/c/${inviteCode}`;
+  const url = `${base}/c/${encodeURIComponent(inviteCode)}`;
 
   const v =
     process.env.VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_DEPLOYMENT_ID ||
     "dev";
 
-  const image = `${base}/api/og/c/${inviteCode}?v=${encodeURIComponent(v)}`;
+  const image = `${base}/api/og/c/${encodeURIComponent(inviteCode)}?v=${encodeURIComponent(v)}`;
 
   return {
     metadataBase: new URL(base),

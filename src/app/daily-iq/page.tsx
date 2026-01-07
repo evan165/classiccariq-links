@@ -5,21 +5,27 @@ import { buildDetourTarget } from "@/lib/detour";
 
 export const runtime = "edge";
 
+const base = "https://links.classiccariq.com";
 const ogVersion =
   process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_DEPLOYMENT_ID || "dev";
-const image = `https://links.classiccariq.com/api/og/daily-iq?v=${encodeURIComponent(ogVersion)}`;
+const image = `${base}/api/og/daily-iq?v=${encodeURIComponent(ogVersion)}`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(base),
   title: "Classic Car IQ — Daily IQ",
   description: "Take today’s Classic Car IQ Daily IQ challenge.",
+  alternates: { canonical: `${base}/daily-iq` },
   openGraph: {
     title: "Classic Car IQ — Daily IQ",
     description: "Take today’s Classic Car IQ Daily IQ challenge.",
-    url: "https://links.classiccariq.com/daily-iq",
+    url: `${base}/daily-iq`,
     type: "website",
     images: [
       {
         url: image,
+        width: 1200,
+        height: 630,
+        alt: "Classic Car IQ — Daily IQ",
       },
     ],
   },

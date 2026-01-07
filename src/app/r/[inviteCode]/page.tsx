@@ -11,23 +11,37 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { inviteCode } = await params;
 
-  const url = `https://links.classiccariq.com/r/${encodeURIComponent(inviteCode)}`;
+  const base = "https://links.classiccariq.com";
+  const url = `${base}/r/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Result";
   const description = "See how this Classic Car IQ challenge turned out.";
 
-  // Single query param only (prevents &amp; escaping issues)
-  const cb = Date.now().toString();
-  const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(inviteCode)}?cb=${encodeURIComponent(cb)}`;
+  // Use a stable, deployment-scoped cache buster. iOS/Messages can cache failures,
+  // and a per-request timestamp makes it re-fetch every time (slower + more brittle).
+  const v =
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    process.env.VERCEL_DEPLOYMENT_ID ||
+    "dev";
+  const ogImage = `${base}/api/og/r/${encodeURIComponent(inviteCode)}?v=${encodeURIComponent(v)}`;
 
   return {
+    metadataBase: new URL(base),
     title,
     description,
+    alternates: { canonical: url },
     openGraph: {
       title,
       description,
       url,
       type: "website",
-      images: [{ url: ogImage }],
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
