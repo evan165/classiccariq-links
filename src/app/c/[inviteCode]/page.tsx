@@ -9,18 +9,20 @@ type Props = {
   params: Promise<{ inviteCode: string }>;
 };
 
+/**
+ * iOS Share Sheet / Messages preview uses og:image as the main preview.
+ * To show the app icon instead of a generated OG image, we use the square
+ * app icon (512x512 with dark background) and twitter:card "summary" for
+ * square thumbnails. This gives a consistent large app icon in iOS shares.
+ */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { inviteCode } = await params;
 
   const base = "https://links.classiccariq.com";
   const url = `${base}/c/${inviteCode}`;
 
-  const v =
-    process.env.VERCEL_GIT_COMMIT_SHA ||
-    process.env.VERCEL_DEPLOYMENT_ID ||
-    "dev";
-
-  const image = `${base}/api/og/c/${inviteCode}?v=${encodeURIComponent(v)}`;
+  // Use square app icon for iOS Share Sheet previews (dark background, 512x512)
+  const appIcon = `${base}/android-chrome-512x512.png`;
 
   return {
     metadataBase: new URL(base),
@@ -32,13 +34,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: "Tap to open this Classic Car IQ challenge in the app.",
       url,
       type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: "Classic Car IQ — Challenge Invite" }],
+      // Square app icon for iOS Share Sheet previews
+      images: [{ url: appIcon, width: 512, height: 512, alt: "Classic Car IQ" }],
     },
     twitter: {
-      card: "summary_large_image",
+      // "summary" card type for square thumbnail (vs "summary_large_image" for rectangular)
+      card: "summary",
       title: "Classic Car IQ — Challenge Invite",
       description: "Tap to open this Classic Car IQ challenge in the app.",
-      images: [image],
+      images: [appIcon],
     },
   };
 }

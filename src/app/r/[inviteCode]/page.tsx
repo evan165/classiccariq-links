@@ -4,6 +4,12 @@ import { buildDetourTarget } from "@/lib/detour";
 
 export const runtime = "edge";
 
+/**
+ * iOS Share Sheet / Messages preview uses og:image as the main preview.
+ * To show the app icon instead of a generated OG image, we use the square
+ * app icon (512x512 with dark background) and twitter:card "summary" for
+ * square thumbnails. This gives a consistent large app icon in iOS shares.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -11,13 +17,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { inviteCode } = await params;
 
-  const url = `https://links.classiccariq.com/r/${encodeURIComponent(inviteCode)}`;
+  const base = "https://links.classiccariq.com";
+  const url = `${base}/r/${encodeURIComponent(inviteCode)}`;
   const title = "Classic Car IQ — Challenge Result";
   const description = "See how this Classic Car IQ challenge turned out.";
 
-  // Single query param only (prevents &amp; escaping issues)
-  const cb = Date.now().toString();
-  const ogImage = `https://links.classiccariq.com/api/og/r/${encodeURIComponent(inviteCode)}?cb=${encodeURIComponent(cb)}`;
+  // Use square app icon for iOS Share Sheet previews (dark background, 512x512)
+  const appIcon = `${base}/android-chrome-512x512.png`;
 
   return {
     title,
@@ -27,13 +33,15 @@ export async function generateMetadata({
       description,
       url,
       type: "website",
-      images: [{ url: ogImage }],
+      // Square app icon for iOS Share Sheet previews
+      images: [{ url: appIcon, width: 512, height: 512, alt: "Classic Car IQ" }],
     },
     twitter: {
-      card: "summary_large_image",
+      // "summary" card type for square thumbnail (vs "summary_large_image" for rectangular)
+      card: "summary",
       title,
       description,
-      images: [ogImage],
+      images: [appIcon],
     },
   };
 }
