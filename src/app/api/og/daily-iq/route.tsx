@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-import { renderOg } from "../../../../../og/renderer";
+import { dailyCard } from "../../../../../og/cards";
+import { cardResponse } from "../../../../../og/respond";
 import { renderDailyResult } from "../../../../../og/dailyResult";
 import { dayLabel, parseDailyResult, secondsLabel } from "@/lib/dailyResult";
 import { getDailyResultPhoto } from "@/lib/dailyResultPhoto";
@@ -33,16 +34,11 @@ export async function GET(req: Request) {
       "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
   };
 
-  const renderFallback = () =>
-    new ImageResponse(
-      renderOg({
-        variant: "daily",
-        logoUrl,
-        subtitle: "Today’s Daily IQ is ready",
-        cta: "One shot, every day. Choose wisely.",
-      }),
-      { width: 1200, height: 630, headers }
-    );
+  // No result in the link: today's Daily IQ, in the gauge style.
+  const renderFallback = () => {
+    const day = new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/Los_Angeles" }).replace(",", "").toUpperCase();
+    return cardResponse(() => dailyCard({ logoUrl, dayLabel: day }), site);
+  };
 
   // A player's own result, when the shared link carries one.
   const result = parseDailyResult(new URL(req.url).searchParams);
