@@ -24,8 +24,8 @@ const RUST = "#A04C2F";
 const TEXT_MUTED = "#A69F92";
 const LINE = "#CFC4AC";
 
-const DISPLAY = "Barlow Condensed";
-const BODY = "Barlow";
+const DISPLAY = "CCIQ Display";
+const BODY = "CCIQ Text";
 
 // ---------------------------------------------------------------- pieces
 
