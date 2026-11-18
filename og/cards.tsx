@@ -374,8 +374,8 @@ export async function loadCardFonts() {
   const [c7, c8, b4, b6] = await Promise.all([
     load("BarlowCondensed_700Bold.ttf"),
     load("BarlowCondensed_800ExtraBold.ttf"),
-    load("barlow-latin-400-normal.woff"),
-    load("barlow-latin-600-normal.woff"),
+    load("Barlow_400Regular.ttf"),
+    load("Barlow_600SemiBold.ttf"),
   ]);
   return [
     { name: DISPLAY, data: c7, weight: 700 as const, style: "normal" as const },
